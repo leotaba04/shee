@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Doraemon x Valentine ❤️🍩</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #ffb6c1; /* Valentine pink */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            flex-direction: column;
+        }
+
+        h1 {
+            color: white;
+            font-size: 36px;
+            text-align: center;
+        }
+
+        button {
+            padding: 12px 25px;
+            font-size: 18px;
+            border: none;
+            border-radius: 15px;
+            background-color: #0077ff; /* Doraemon blue */
+            color: white;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #005bb5;
+        }
+
+        /* Floating items */
+        .floating {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; }
+            20% { opacity: 1; }
+            100% { transform: translateY(-10vh) scale(1) rotate(360deg); opacity: 0; }
+        }
+
+        .hidden { display: none; }
+
+        /* Bouquet container */
+        #bouquet-container {
+            position: relative;
+            width: 500px;
+            height: 500px;
+            margin: 0 auto;
+        }
+
+        /* Center photo */
+        .center-photo {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10;
+            cursor: pointer;
+        }
+
+        /* Petals */
+        .petal {
+            position: absolute;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .petal-back { opacity: 0.9; }
+
+        .petal:hover {
+            transform: scale(1.2) translateZ(0);
+            box-shadow: 0 0 25px yellow;
+            z-index: 20;
+        }
+
+        .rotate {
+            animation: rotateBouquet 25s linear infinite;
+            transform-origin: 50% 50%;
+        }
+
+        @keyframes rotateBouquet {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="hearts" id="hearts"></div>
+
+<div id="page1">
+    <h1>Will you be my Valentine? ❤️🍩</h1>
+    <button onclick="goNext()">YES ❤️</button>
+</div>
+
+<div id="page2" class="hidden">
+    <h1>I LOVE YOU SO MUCH BABY 😘</h1>
+    <h1>CAN’T WAIT TO SEE YOU 💞</h1>
+    <button onclick="showPics()">Click Again 💕</button>
+</div>
+
+<div id="page3" class="hidden">
+    <h1>My one and only baby ❤️🍩</h1>
+    <div id="bouquet-container">
+        <img src="main.jpg" class="center-photo" onclick="showMessage('Forever together 💖')">
+    </div>
+</div>
+
+<audio id="bgmusic" loop>
+    <source src="hihi.mp3" type="audio/mp3">
+</audio>
+
+<script>
+    const heartPhoto = "pic1.jpg"; // optional floating photo hearts
+    const petalPhotosFront = ["p1.jpg","p2.jpg","p3.jpg","p4.jpg","p5.jpg","p6.jpg","p7.jpg","p8.jpg"];
+    const petalPhotosBack  = ["y1.jpg","y2.jpg","y3.jpg","y4.jpg","y5.jpg","y6.jpg","y7.jpg","y8.jpg"];
+
+    function goNext() {
+        document.getElementById("page1").classList.add("hidden");
+        document.getElementById("page2").classList.remove("hidden");
+        document.getElementById("bgmusic").play();
+    }
+
+    function showPics() {
+        document.getElementById("page2").classList.add("hidden");
+        document.getElementById("page3").classList.remove("hidden");
+        createPetals();
+    }
+
+    function showMessage(msg) {
+        alert(msg);
+    }
+
+    // Floating hearts ❤️
+    function createHeart() {
+        const heart = document.createElement("div");
+        heart.classList.add("floating");
+        heart.innerHTML = "❤️";
+        const size = Math.random() * 30 + 15;
+        heart.style.fontSize = size + "px";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = (Math.random() * 4 + 2) + "s";
+        heart.style.transform = `rotate(${Math.random()*360}deg)`;
+        document.getElementById("hearts").appendChild(heart);
+        setTimeout(() => heart.remove(), 6000);
+    }
+
+    // Floating donuts 🍩
+    function createDonut() {
+        const donut = document.createElement("div");
+        donut.classList.add("floating");
+        donut.innerHTML = "🍩";
+        const size = Math.random() * 35 + 20;
+        donut.style.fontSize = size + "px";
+        donut.style.left = Math.random() * 100 + "vw";
+        donut.style.animationDuration = (Math.random() * 5 + 2) + "s";
+        donut.style.transform = `rotate(${Math.random()*360}deg)`;
+        document.getElementById("hearts").appendChild(donut);
+        setTimeout(() => donut.remove(), 6000);
+    }
+
+    setInterval(createHeart, 150);
+    setInterval(createDonut, 250); // more popping donuts
+
+    // Create bouquet petals
+    function createPetals() {
+        const container = document.getElementById("bouquet-container");
+        const centerX = 250;
+        const centerY = 250;
+
+        // Front petals
+        const radiusFront = 180;
+        petalPhotosFront.forEach((src,i) => {
+            const angle = (i / petalPhotosFront.length) * 2 * Math.PI;
+            const size = Math.random()*40 + 70;
+            const petal = document.createElement("img");
+            petal.src = src;
+            petal.classList.add("petal","rotate");
+            petal.style.width = size+"px";
+            petal.style.height = size+"px";
+            petal.style.left = centerX + radiusFront*Math.cos(angle) - size/2 + "px";
+            petal.style.top  = centerY + radiusFront*Math.sin(angle) - size/2 + "px";
+            petal.onclick = () => showMessage("You make my heart skip a beat 💖");
+            container.appendChild(petal);
+        });
+
+        // Back petals
+        const radiusBack = 130;
+        petalPhotosBack.forEach((src,i) => {
+            const angle = (i / petalPhotosBack.length) * 2 * Math.PI;
+            const size = Math.random()*30 + 50;
+            const petal = document.createElement("img");
+            petal.src = src;
+            petal.classList.add("petal","petal-back","rotate");
+            petal.style.width = size+"px";
+            petal.style.height = size+"px";
+            petal.style.left = centerX + radiusBack*Math.cos(angle) - size/2 + "px";
+            petal.style.top  = centerY + radiusBack*Math.sin(angle) - size/2 + "px";
+            petal.onclick = () => showMessage("You are my everything 💖");
+            container.appendChild(petal);
+        });
+    }
+</script>
+
+</body>
+</html>
+ 
